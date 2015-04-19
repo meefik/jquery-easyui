@@ -10,8 +10,8 @@ if ($.fn.treegrid && $.fn.datagrid){
 	$.fn.treegrid.defaults.loadMsg = $.fn.datagrid.defaults.loadMsg;
 }
 if ($.messager){
-	$.messager.defaults.ok = 'Ок';
-	$.messager.defaults.cancel = 'Закрыть';
+	$.messager.defaults.ok = 'ОК';
+	$.messager.defaults.cancel = 'Отмена';
 }
 $.map(['validatebox','textbox','filebox','searchbox',
 		'combo','combobox','combogrid','combotree',
@@ -35,7 +35,25 @@ if ($.fn.calendar){
 if ($.fn.datebox){
 	$.fn.datebox.defaults.currentText = 'Сегодня';
 	$.fn.datebox.defaults.closeText = 'Закрыть';
-	$.fn.datebox.defaults.okText = 'Ок';
+	$.fn.datebox.defaults.okText = 'ОК';
+    $.fn.datebox.defaults.parser = function(s) {
+        if(!s) return new Date();
+        var ss = s.split('.');
+        var d = parseInt(ss[0], 10);
+        var m = parseInt(ss[1], 10);
+        var y = parseInt(ss[2], 10);
+        if(!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+            return new Date(y, m - 1, d);
+        } else {
+            return new Date();
+        }
+    }
+    $.fn.datebox.defaults.formatter = function(d) {
+        var y = d.getFullYear();
+        var m = ("00" + (d.getMonth() + 1)).slice(-2);
+        var d = ("00" + d.getDate()).slice(-2);
+        return d + '.' + m + '.' + y;
+    }
 }
 if ($.fn.datetimebox && $.fn.datebox){
 	$.extend($.fn.datetimebox.defaults,{
@@ -43,4 +61,9 @@ if ($.fn.datetimebox && $.fn.datebox){
 		closeText: $.fn.datebox.defaults.closeText,
 		okText: $.fn.datebox.defaults.okText
 	});
+}
+if ($.fn.panel) {
+    $.extend($.fn.panel.defaults, {
+        loadingMessage: "Загрузка..."
+    });   
 }
