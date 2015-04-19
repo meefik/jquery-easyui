@@ -1,18 +1,18 @@
 {
   "name": "jeasyui",
   "version": "1.4.2",
+  "main": "jquery.easyui.min.js",
+  "description": "jQuery EasyUI library",
+  "license": "GPL",
+  "homepage": "http://www.jeasyui.com",
   "dependencies": {
     "jquery": "~1.11.1"
   },
   "authors": [
     "EasyUI team <support@jeasyui.com>"
   ],
-  "description": "jQuery EasyUI library from www.jeasyui.com",
-  "main": "jquery.easyui.min.js",
   "keywords": [
     "easyui",
     "1.4.2"
-  ],
-  "license": "GPL",
-  "homepage": "https://github.com/meefik/jquery-easyui"
+  ]
 }
