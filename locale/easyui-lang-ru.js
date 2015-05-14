@@ -18,14 +18,14 @@ $.map(['validatebox','textbox','filebox','searchbox',
 		'datebox','datetimebox','numberbox',
 		'spinner','numberspinner','timespinner','datetimespinner'], function(plugin){
 	if ($.fn[plugin]){
-		$.fn[plugin].defaults.missingMessage = 'Это поле необходимо.';
+		$.fn[plugin].defaults.missingMessage = 'Необходимо заполнить';
 	}
 });
 if ($.fn.validatebox){
-	$.fn.validatebox.defaults.rules.email.message = 'Пожалуйста введите корректный e-mail адрес.';
-	$.fn.validatebox.defaults.rules.url.message = 'Пожалуйста введите корректный URL.';
-	$.fn.validatebox.defaults.rules.length.message = 'Пожалуйста введите зачение между {0} и {1}.';
-	$.fn.validatebox.defaults.rules.remote.message = 'Пожалуйста исправте это поле.';
+	$.fn.validatebox.defaults.rules.email.message = 'Пожалуйста введите корректный e-mail адрес';
+	$.fn.validatebox.defaults.rules.url.message = 'Пожалуйста введите корректный URL';
+	$.fn.validatebox.defaults.rules.length.message = 'Пожалуйста введите зачение между {0} и {1}';
+	$.fn.validatebox.defaults.rules.remote.message = 'Пожалуйста исправте это поле';
 }
 if ($.fn.calendar){
 	$.fn.calendar.defaults.firstDay = 1;
