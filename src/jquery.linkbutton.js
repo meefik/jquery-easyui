@@ -1,14 +1,14 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 /**
- * linkbutton - jQuery EasyUI
+ * linkbutton - EasyUI for jQuery
  * 
  */
 (function($){
@@ -72,13 +72,13 @@
 			inner.addClass('l-btn-icon-'+opts.iconAlign);
 		}
 		
-		t.unbind('.linkbutton').bind('focus.linkbutton',function(){
+		t._unbind('.linkbutton')._bind('focus.linkbutton',function(){
 			if (!opts.disabled){
 				$(this).addClass('l-btn-focus');
 			}
-		}).bind('blur.linkbutton',function(){
+		})._bind('blur.linkbutton',function(){
 			$(this).removeClass('l-btn-focus');
-		}).bind('click.linkbutton',function(){
+		})._bind('click.linkbutton',function(){
 			if (!opts.disabled){
 				if (opts.toggle){
 					if (opts.selected){
@@ -91,15 +91,6 @@
 			}
 //			return false;
 		});
-//		if (opts.toggle && !opts.disabled){
-//			t.bind('click.linkbutton', function(){
-//				if (opts.selected){
-//					$(this).linkbutton('unselect');
-//				} else {
-//					$(this).linkbutton('select');
-//				}
-//			});
-//		}
 		
 		setSelected(target, opts.selected)
 		setDisabled(target, opts.disabled);
@@ -136,7 +127,7 @@
 			var href = $(target).attr('href');
 			if (href){
 				state.href = href;
-				$(target).attr('href', 'javascript:void(0)');
+				$(target).attr('href', 'javascript:;');
 			}
 			if (target.onclick){
 				state.onclick = target.onclick;
@@ -152,6 +143,7 @@
 				target.onclick = state.onclick;
 			}
 		}
+		$(target)._propAttr('disabled', disabled);
 	}
 	
 	$.fn.linkbutton = function(options, param){
@@ -168,8 +160,9 @@
 				$.data(this, 'linkbutton', {
 					options: $.extend({}, $.fn.linkbutton.defaults, $.fn.linkbutton.parseOptions(this), options)
 				});
-				$(this).removeAttr('disabled');
-				$(this).bind('_resize', function(e, force){
+				// $(this).removeAttr('disabled');
+				$(this)._propAttr('disabled', false);
+				$(this)._bind('_resize', function(e, force){
 					if ($(this).hasClass('easyui-fluid') || force){
 						setSize(this);
 					}

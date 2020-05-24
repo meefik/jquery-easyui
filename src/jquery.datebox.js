@@ -1,14 +1,14 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 /**
- * datebox - jQuery EasyUI
+ * datebox - EasyUI for jQuery
  * 
  * Dependencies:
  * 	 calendar
@@ -65,9 +65,9 @@
 				onSelect:function(date){
 					var target = this.target;
 					var opts = $(target).datebox('options');
+					opts.onSelect.call(target, date);
 					setValue(target, opts.formatter.call(target, date));
 					$(target).combo('hidePanel');
-					opts.onSelect.call(target, date);
 				}
 			});
 		}
@@ -78,7 +78,7 @@
 		function bindEvents(target){
 			var opts = $(target).datebox('options');
 			var panel = $(target).combo('panel');
-			panel.unbind('.datebox').bind('click.datebox', function(e){
+			panel._unbind('.datebox')._bind('click.datebox', function(e){
 				if ($(e.target).hasClass('datebox-button-a')){
 					var index = parseInt($(e.target).attr('datebox-button-index'));
 					opts.buttons[index].handler.call(e.target, target);
@@ -93,7 +93,7 @@
 			for(var i=0; i<opts.buttons.length; i++){
 				var td = $('<td></td>').appendTo(tr);
 				var btn = opts.buttons[i];
-				var t = $('<a class="datebox-button-a" href="javascript:void(0)"></a>').html($.isFunction(btn.text) ? btn.text(target) : btn.text).appendTo(td);
+				var t = $('<a class="datebox-button-a" href="javascript:;"></a>').html($.isFunction(btn.text) ? btn.text(target) : btn.text).appendTo(td);
 				t.attr('datebox-button-index', i);
 			}
 			tr.find('td').css('width', (100/opts.buttons.length)+'%');
@@ -203,7 +203,9 @@
 				var opts = $(this).datebox('options');
 				var value = opts.value;
 				if (value){
-					value = opts.formatter.call(this, opts.parser.call(this, value));
+					var date = opts.parser.call(this, value);
+					value = opts.formatter.call(this, date);
+					$(this).datebox('calendar').calendar('moveTo', date);
 				}
 				$(this).combo('initValue', value).combo('setText', value);
 			});
@@ -218,6 +220,20 @@
 				var opts = $(this).datebox('options');
 				$(this).datebox('setValue', opts.originalValue);
 			});
+		},
+		setDate: function(jq, date){
+			return jq.each(function(){
+				var opts = $(this).datebox('options');
+				$(this).datebox('calendar').calendar('moveTo', date);
+				setValue(this, date ? opts.formatter.call(this, date) : '');
+			});
+		},
+		getDate: function(jq){
+			if (jq.datebox('getValue')){
+				return jq.datebox('calendar').calendar('options').current;
+			} else {
+				return null;
+			}
 		}
 	};
 	
@@ -226,7 +242,7 @@
 	};
 	
 	$.fn.datebox.defaults = $.extend({}, $.fn.combo.defaults, {
-		panelWidth:180,
+		panelWidth:250,
 		panelHeight:'auto',
 		sharedCalendar:null,
 		
@@ -238,7 +254,6 @@
 			enter:function(e){doEnter(this)},
 			query:function(q,e){doQuery(this, q)}
 		},
-		
 		currentText:'Today',
 		closeText:'Close',
 		okText:'Ok',
@@ -246,12 +261,15 @@
 		buttons:[{
 			text: function(target){return $(target).datebox('options').currentText;},
 			handler: function(target){
+				var opts = $(target).datebox('options');
 				var now = new Date();
+				var current = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 				$(target).datebox('calendar').calendar({
-					year:now.getFullYear(),
-					month:now.getMonth()+1,
-					current:new Date(now.getFullYear(), now.getMonth(), now.getDate())
+					year:current.getFullYear(),
+					month:current.getMonth()+1,
+					current:current
 				});
+				opts.onSelect.call(target, current);
 				doEnter(target);
 			}
 		},{
@@ -268,15 +286,16 @@
 			return (m<10?('0'+m):m)+'/'+(d<10?('0'+d):d)+'/'+y;
 		},
 		parser:function(s){
-			if (!s) return new Date();
+			var copts = $(this).datebox('calendar').calendar('options');
+			if (!s) return new copts.Date();
 			var ss = s.split('/');
 			var m = parseInt(ss[0],10);
 			var d = parseInt(ss[1],10);
 			var y = parseInt(ss[2],10);
 			if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
-				return new Date(y,m-1,d);
+				return new copts.Date(y,m-1,d);
 			} else {
-				return new Date();
+				return new copts.Date();
 			}
 		},
 		

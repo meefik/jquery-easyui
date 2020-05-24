@@ -1,14 +1,14 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 /**
- * easyloader - jQuery EasyUI
+ * easyloader - EasyUI for jQuery
  * 
  */
 (function(){
@@ -123,10 +123,28 @@
 			css:'textbox.css',
 			dependencies:['validatebox','linkbutton']
 		},
+		passwordbox:{
+			js:'jquery.passwordbox.js',
+			css:'passwordbox.css',
+			dependencies:['textbox']
+		},
 		filebox:{
 			js:'jquery.filebox.js',
 			css:'filebox.css',
 			dependencies:['textbox']
+		},
+		radiobutton:{
+			js:'jquery.radiobutton.js',
+			css:'radiobutton.css'
+		},
+		checkbox:{
+			js:'jquery.checkbox.js',
+			css:'checkbox.css'
+		},
+		sidemenu:{
+			js:'jquery.sidemenu.js',
+			css:'sidemenu.css',
+			dependencies:['accordion','tree','tooltip']
 		},
 		combo:{
 			js:'jquery.combo.js',
@@ -145,6 +163,14 @@
 		combogrid:{
 			js:'jquery.combogrid.js',
 			dependencies:['combo','datagrid']
+		},
+		combotreegrid:{
+			js:'jquery.combotreegrid.js',
+			dependencies:['combo','treegrid']
+		},
+		tagbox:{
+			js:'jquery.tagbox.js',
+			dependencies:['combobox']
 		},
 		validatebox:{
 			js:'jquery.validatebox.js',
@@ -173,6 +199,11 @@
 			js:'jquery.timespinner.js',
 			dependencies:['spinner']
 		},
+		timepicker:{
+			js:'jquery.timepicker.js',
+			css:'timepicker.css',
+			dependencies:['combo']
+		},
 		tree:{
 			js:'jquery.tree.js',
 			css:'tree.css',
@@ -192,7 +223,8 @@
 			dependencies:['draggable']
 		},
 		parser:{
-			js:'jquery.parser.js'
+			js:'jquery.parser.js',
+			css:'flex.css'
 		},
 		mobile:{
 			js:'jquery.mobile.js'
@@ -318,6 +350,7 @@
 				add(name[i]);
 			}
 		}
+		mm.unshift('parser');
 		
 		function add(name){
 			if (!modules[name]) return;
@@ -332,6 +365,9 @@
 		
 		function finish(){
 			if (callback){
+				if (window.jQuery){
+					window.jQuery.parser.parseVars();
+				}
 				callback();
 			}
 			easyloader.onLoad(name);

@@ -1,7 +1,7 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
@@ -67,7 +67,7 @@ return false;
 }
 var _d=$.data(e.data.target,"draggable");
 var _e=_d.options;
-var _f=$(".droppable").filter(function(){
+var _f=$(".droppable:visible").filter(function(){
 return e.data.target!=this;
 }).filter(function(){
 var _10=$.data(this,"droppable").options.accept;
@@ -139,6 +139,7 @@ _12(e);
 var _18=$.data(e.data.target,"draggable");
 var _19=_18.proxy;
 var _1a=_18.options;
+_1a.onEndDrag.call(e.data.target,e);
 if(_1a.revert){
 if(_1b()==true){
 $(e.data.target).css({position:e.data.startPosition,left:e.data.startLeft,top:e.data.startTop});
@@ -185,7 +186,7 @@ if(e.pageX>p2.left&&e.pageX<p2.left+_1f.outerWidth()&&e.pageY>p2.top&&e.pageY<p2
 if(_1a.revert){
 $(e.data.target).css({position:e.data.startPosition,left:e.data.startLeft,top:e.data.startTop});
 }
-$(this).trigger("_drop",[e.data.target]);
+$(this).triggerHandler("_drop",[e.data.target]);
 _1d();
 _1e=true;
 this.entered=false;
@@ -204,7 +205,7 @@ if($.fn.draggable.timer){
 clearTimeout($.fn.draggable.timer);
 $.fn.draggable.timer=undefined;
 }
-$(document).unbind(".draggable");
+$(document)._unbind(".draggable");
 $.fn.draggable.isDragging=false;
 setTimeout(function(){
 $("body").css("cursor","");
@@ -218,7 +219,7 @@ return this.each(function(){
 var _22;
 var _23=$.data(this,"draggable");
 if(_23){
-_23.handle.unbind(".draggable");
+_23.handle._unbind(".draggable");
 _22=$.extend(_23.options,_20);
 }else{
 _22=$.extend({},$.fn.draggable.defaults,$.fn.draggable.parseOptions(this),_20||{});
@@ -229,7 +230,7 @@ if(_22.disabled){
 $(this).css("cursor","");
 return;
 }
-_24.unbind(".draggable").bind("mousemove.draggable",{target:this},function(e){
+_24._unbind(".draggable")._bind("mousemove.draggable",{target:this},function(e){
 if($.fn.draggable.isDragging){
 return;
 }
@@ -239,24 +240,24 @@ $(this).css("cursor",_25.cursor);
 }else{
 $(this).css("cursor","");
 }
-}).bind("mouseleave.draggable",{target:this},function(e){
+})._bind("mouseleave.draggable",{target:this},function(e){
 $(this).css("cursor","");
-}).bind("mousedown.draggable",{target:this},function(e){
+})._bind("mousedown.draggable",{target:this},function(e){
 if(_26(e)==false){
 return;
 }
 $(this).css("cursor","");
 var _27=$(e.data.target).position();
 var _28=$(e.data.target).offset();
-var _29={startPosition:$(e.data.target).css("position"),startLeft:_27.left,startTop:_27.top,left:_27.left,top:_27.top,startX:e.pageX,startY:e.pageY,offsetWidth:(e.pageX-_28.left),offsetHeight:(e.pageY-_28.top),target:e.data.target,parent:$(e.data.target).parent()[0]};
+var _29={startPosition:$(e.data.target).css("position"),startLeft:_27.left,startTop:_27.top,left:_27.left,top:_27.top,startX:e.pageX,startY:e.pageY,width:$(e.data.target).outerWidth(),height:$(e.data.target).outerHeight(),offsetWidth:(e.pageX-_28.left),offsetHeight:(e.pageY-_28.top),target:e.data.target,parent:$(e.data.target).parent()[0]};
 $.extend(e.data,_29);
 var _2a=$.data(e.data.target,"draggable").options;
 if(_2a.onBeforeDrag.call(e.data.target,e)==false){
 return;
 }
-$(document).bind("mousedown.draggable",e.data,_c);
-$(document).bind("mousemove.draggable",e.data,_12);
-$(document).bind("mouseup.draggable",e.data,_16);
+$(document)._bind("mousedown.draggable",e.data,_c);
+$(document)._bind("mousemove.draggable",e.data,_12);
+$(document)._bind("mouseup.draggable",e.data,_16);
 $.fn.draggable.timer=setTimeout(function(){
 $.fn.draggable.isDragging=true;
 _c(e);
@@ -297,6 +298,7 @@ return $.extend({},$.parser.parseOptions(_30,["cursor","handle","axis",{"revert"
 $.fn.draggable.defaults={proxy:null,revert:false,cursor:"move",deltaX:null,deltaY:null,handle:null,disabled:false,edge:0,axis:null,delay:100,onBeforeDrag:function(e){
 },onStartDrag:function(e){
 },onDrag:function(e){
+},onEndDrag:function(e){
 },onStopDrag:function(e){
 }};
 $.fn.draggable.isDragging=false;

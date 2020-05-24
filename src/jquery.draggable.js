@@ -1,14 +1,14 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 /**
- * draggable - jQuery EasyUI
+ * draggable - EasyUI for jQuery
  * 
  */
 (function($){
@@ -77,8 +77,8 @@
 		
 		var state = $.data(e.data.target, 'draggable');
 		var opts = state.options;
-		
-		var droppables = $('.droppable').filter(function(){
+
+		var droppables = $('.droppable:visible').filter(function(){
 			return e.data.target != this;
 		}).filter(function(){
 			var accept = $.data(this, 'droppable').options.accept;
@@ -158,6 +158,7 @@
 		var state = $.data(e.data.target, 'draggable');
 		var proxy = state.proxy;
 		var opts = state.options;
+		opts.onEndDrag.call(e.data.target, e);
 		if (opts.revert){
 			if (checkDrop() == true){
 				$(e.data.target).css({
@@ -226,7 +227,7 @@
 							top:e.data.startTop
 						});
 					}
-					$(this).trigger('_drop', [e.data.target]);
+					$(this).triggerHandler('_drop', [e.data.target]);
 					removeProxy();
 					dropped = true;
 					this.entered = false;
@@ -247,7 +248,7 @@
 			clearTimeout($.fn.draggable.timer);
 			$.fn.draggable.timer = undefined;
 		}
-		$(document).unbind('.draggable');
+		$(document)._unbind('.draggable');
 		$.fn.draggable.isDragging = false;
 		setTimeout(function(){
 			$('body').css('cursor','');
@@ -263,7 +264,7 @@
 			var opts;
 			var state = $.data(this, 'draggable');
 			if (state) {
-				state.handle.unbind('.draggable');
+				state.handle._unbind('.draggable');
 				opts = $.extend(state.options, options);
 			} else {
 				opts = $.extend({}, $.fn.draggable.defaults, $.fn.draggable.parseOptions(this), options || {});
@@ -280,7 +281,7 @@
 				return;
 			}
 			
-			handle.unbind('.draggable').bind('mousemove.draggable', {target:this}, function(e){
+			handle._unbind('.draggable')._bind('mousemove.draggable', {target:this}, function(e){
 				if ($.fn.draggable.isDragging){return}
 				var opts = $.data(e.data.target, 'draggable').options;
 				if (checkArea(e)){
@@ -288,9 +289,9 @@
 				} else {
 					$(this).css('cursor', '');
 				}
-			}).bind('mouseleave.draggable', {target:this}, function(e){
+			})._bind('mouseleave.draggable', {target:this}, function(e){
 				$(this).css('cursor', '');
-			}).bind('mousedown.draggable', {target:this}, function(e){
+			})._bind('mousedown.draggable', {target:this}, function(e){
 				if (checkArea(e) == false) return;
 				$(this).css('cursor', '');
 
@@ -304,6 +305,8 @@
 					top: position.top,
 					startX: e.pageX,
 					startY: e.pageY,
+					width: $(e.data.target).outerWidth(),
+					height: $(e.data.target).outerHeight(),
 					offsetWidth: (e.pageX - offset.left),
 					offsetHeight: (e.pageY - offset.top),
 					target: e.data.target,
@@ -314,9 +317,9 @@
 				var opts = $.data(e.data.target, 'draggable').options;
 				if (opts.onBeforeDrag.call(e.data.target, e) == false) return;
 				
-				$(document).bind('mousedown.draggable', e.data, doDown);
-				$(document).bind('mousemove.draggable', e.data, doMove);
-				$(document).bind('mouseup.draggable', e.data, doUp);
+				$(document)._bind('mousedown.draggable', e.data, doDown);
+				$(document)._bind('mousemove.draggable', e.data, doMove);
+				$(document)._bind('mouseup.draggable', e.data, doUp);
 				
 				$.fn.draggable.timer = setTimeout(function(){
 					$.fn.draggable.isDragging = true;
@@ -387,6 +390,7 @@
 		onBeforeDrag: function(e){},
 		onStartDrag: function(e){},
 		onDrag: function(e){},
+		onEndDrag: function(e){},
 		onStopDrag: function(e){}
 	};
 	

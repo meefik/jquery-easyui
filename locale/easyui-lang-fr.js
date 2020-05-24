@@ -13,7 +13,7 @@ if ($.messager){
 	$.messager.defaults.ok = 'Ok';
 	$.messager.defaults.cancel = 'Annuler';
 }
-$.map(['validatebox','textbox','filebox','searchbox',
+$.map(['validatebox','textbox','passwordbox','filebox','searchbox',
 		'combo','combobox','combogrid','combotree',
 		'datebox','datetimebox','numberbox',
 		'spinner','numberspinner','timespinner','datetimespinner'], function(plugin){
@@ -28,12 +28,30 @@ if ($.fn.validatebox){
 }
 if ($.fn.calendar){
 	$.fn.calendar.defaults.weeks = ['S','M','T','W','T','F','S'];
-	$.fn.calendar.defaults.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	$.fn.calendar.defaults.months = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aôu", "Sep", "Oct", "Nov", "Déc"];
 }
 if ($.fn.datebox){
 	$.fn.datebox.defaults.currentText = "Aujourd'hui";
 	$.fn.datebox.defaults.closeText = 'Fermer';
 	$.fn.datebox.defaults.okText = 'Ok';
+	$.fn.datebox.defaults.formatter = function(date){
+		var y = date.getFullYear();
+		var m = date.getMonth()+1;
+		var d = date.getDate();
+		return (d<10?('0'+d):d)+'/'+(m<10?('0'+m):m)+'/'+y;
+	};
+	$.fn.datebox.defaults.parser = function(s){
+		if (!s) return new Date();
+		var ss = s.split('/');
+		var d = parseInt(ss[0],10);
+		var m = parseInt(ss[1],10);
+		var y = parseInt(ss[2],10);
+		if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
+			return new Date(y,m-1,d);
+		} else {
+			return new Date();
+		}
+	};
 }
 if ($.fn.datetimebox && $.fn.datebox){
 	$.extend($.fn.datetimebox.defaults,{

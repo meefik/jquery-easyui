@@ -1,14 +1,14 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
  *
  */
 /**
- * progressbar - jQuery EasyUI
+ * progressbar - EasyUI for jQuery
  * 
  * Dependencies:
  * 	 none
@@ -18,7 +18,7 @@
 	function init(target){
 		$(target).addClass('progressbar');
 		$(target).html('<div class="progressbar-text"></div><div class="progressbar-value"><div class="progressbar-text"></div></div>');
-		$(target).bind('_resize', function(e,force){
+		$(target)._bind('_resize', function(e,force){
 			if ($(this).hasClass('easyui-fluid') || force){
 				setSize(target);
 			}

@@ -1,7 +1,7 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
@@ -13,29 +13,25 @@ var _3=$.data(_2,"combotree");
 var _4=_3.options;
 var _5=_3.tree;
 $(_2).addClass("combotree-f");
-$(_2).combo(_4);
+$(_2).combo($.extend({},_4,{onShowPanel:function(){
+if(_4.editable){
+_5.tree("doFilter","");
+}
+_4.onShowPanel.call(this);
+}}));
 var _6=$(_2).combo("panel");
 if(!_5){
 _5=$("<ul></ul>").appendTo(_6);
-$.data(_2,"combotree").tree=_5;
+_3.tree=_5;
 }
 _5.tree($.extend({},_4,{checkbox:_4.multiple,onLoadSuccess:function(_7,_8){
 var _9=$(_2).combotree("getValues");
 if(_4.multiple){
-var _a=_5.tree("getChecked");
-for(var i=0;i<_a.length;i++){
-var id=_a[i].id;
-(function(){
-for(var i=0;i<_9.length;i++){
-if(id==_9[i]){
-return;
+$.map(_5.tree("getChecked"),function(_a){
+$.easyui.addArrayItem(_9,_a.id);
+});
 }
-}
-_9.push(id);
-})();
-}
-}
-$(_2).combotree("setValues",_9);
+_15(_2,_9,_3.remainText);
 _4.onLoadSuccess.call(this,_7,_8);
 },onClick:function(_b){
 if(_4.multiple){
@@ -43,9 +39,11 @@ $(this).tree(_b.checked?"uncheck":"check",_b.target);
 }else{
 $(_2).combo("hidePanel");
 }
+_3.remainText=false;
 _e(_2);
 _4.onClick.call(this,_b);
 },onCheck:function(_c,_d){
+_3.remainText=false;
 _e(_2);
 _4.onCheck.call(this,_c,_d);
 }}));
@@ -54,138 +52,188 @@ function _e(_f){
 var _10=$.data(_f,"combotree");
 var _11=_10.options;
 var _12=_10.tree;
-var vv=[],ss=[];
+var vv=[];
 if(_11.multiple){
-var _13=_12.tree("getChecked");
-for(var i=0;i<_13.length;i++){
-vv.push(_13[i].id);
-ss.push(_13[i].text);
-}
+vv=$.map(_12.tree("getChecked"),function(_13){
+return _13.id;
+});
 }else{
 var _14=_12.tree("getSelected");
 if(_14){
 vv.push(_14.id);
-ss.push(_14.text);
 }
 }
-$(_f).combo("setText",ss.join(_11.separator)).combo("setValues",_11.multiple?vv:(vv.length?vv:[""]));
+vv=vv.concat(_11.unselectedValues);
+_15(_f,vv,_10.remainText);
 };
-function _15(_16,_17){
-var _18=$.data(_16,"combotree");
-var _19=_18.options;
-var _1a=_18.tree;
-var _1b=_1a.tree("options");
-var _1c=_1b.onCheck;
-var _1d=_1b.onSelect;
-_1b.onCheck=_1b.onSelect=function(){
+function _15(_16,_17,_18){
+var _19=$.data(_16,"combotree");
+var _1a=_19.options;
+var _1b=_19.tree;
+var _1c=_1b.tree("options");
+var _1d=_1c.onBeforeCheck;
+var _1e=_1c.onCheck;
+var _1f=_1c.onBeforeSelect;
+var _20=_1c.onSelect;
+_1c.onBeforeCheck=_1c.onCheck=_1c.onBeforeSelect=_1c.onSelect=function(){
 };
-_1a.find("span.tree-checkbox").addClass("tree-checkbox0").removeClass("tree-checkbox1 tree-checkbox2");
 if(!$.isArray(_17)){
-_17=_17.split(_19.separator);
+_17=_17.split(_1a.separator);
 }
-var vv=$.map(_17,function(_1e){
-return String(_1e);
+if(!_1a.multiple){
+_17=_17.length?[_17[0]]:[""];
+}
+var vv=$.map(_17,function(_21){
+return String(_21);
+});
+_1b.find("div.tree-node-selected").removeClass("tree-node-selected");
+$.map(_1b.tree("getChecked"),function(_22){
+if($.inArray(String(_22.id),vv)==-1){
+_1b.tree("uncheck",_22.target);
+}
 });
 var ss=[];
+_1a.unselectedValues=[];
 $.map(vv,function(v){
-var _1f=_1a.tree("find",v);
-if(_1f){
-_1a.tree("check",_1f.target).tree("select",_1f.target);
-ss.push(_1f.text);
+var _23=_1b.tree("find",v);
+if(_23){
+_1b.tree("check",_23.target).tree("select",_23.target);
+ss.push(_24(_23));
 }else{
-ss.push(v);
+ss.push(_25(v,_1a.mappingRows)||v);
+_1a.unselectedValues.push(v);
 }
 });
-if(_19.multiple){
-var _20=_1a.tree("getChecked");
-$.map(_20,function(_21){
-var id=String(_21.id);
+if(_1a.multiple){
+$.map(_1b.tree("getChecked"),function(_26){
+var id=String(_26.id);
 if($.inArray(id,vv)==-1){
 vv.push(id);
-ss.push(_21.text);
+ss.push(_24(_26));
 }
 });
 }
-_1b.onCheck=_1c;
-_1b.onSelect=_1d;
-$(_16).combo("setText",ss.join(_19.separator)).combo("setValues",_19.multiple?vv:(vv.length?vv:[""]));
+_1c.onBeforeCheck=_1d;
+_1c.onCheck=_1e;
+_1c.onBeforeSelect=_1f;
+_1c.onSelect=_20;
+if(!_18){
+var s=ss.join(_1a.separator);
+if($(_16).combo("getText")!=s){
+$(_16).combo("setText",s);
+}
+}
+$(_16).combo("setValues",vv);
+function _25(_27,a){
+var _28=$.easyui.getArrayItem(a,"id",_27);
+return _28?_24(_28):undefined;
 };
-$.fn.combotree=function(_22,_23){
-if(typeof _22=="string"){
-var _24=$.fn.combotree.methods[_22];
-if(_24){
-return _24(this,_23);
+function _24(_29){
+return _29[_1a.textField||""]||_29.text;
+};
+};
+function _2a(_2b,q){
+var _2c=$.data(_2b,"combotree");
+var _2d=_2c.options;
+var _2e=_2c.tree;
+_2c.remainText=true;
+_2e.tree("doFilter",_2d.multiple?q.split(_2d.separator):q);
+};
+function _2f(_30){
+var _31=$.data(_30,"combotree");
+_31.remainText=false;
+$(_30).combotree("setValues",$(_30).combotree("getValues"));
+$(_30).combotree("hidePanel");
+};
+$.fn.combotree=function(_32,_33){
+if(typeof _32=="string"){
+var _34=$.fn.combotree.methods[_32];
+if(_34){
+return _34(this,_33);
 }else{
-return this.combo(_22,_23);
+return this.combo(_32,_33);
 }
 }
-_22=_22||{};
+_32=_32||{};
 return this.each(function(){
-var _25=$.data(this,"combotree");
-if(_25){
-$.extend(_25.options,_22);
+var _35=$.data(this,"combotree");
+if(_35){
+$.extend(_35.options,_32);
 }else{
-$.data(this,"combotree",{options:$.extend({},$.fn.combotree.defaults,$.fn.combotree.parseOptions(this),_22)});
+$.data(this,"combotree",{options:$.extend({},$.fn.combotree.defaults,$.fn.combotree.parseOptions(this),_32)});
 }
 _1(this);
 });
 };
 $.fn.combotree.methods={options:function(jq){
-var _26=jq.combo("options");
-return $.extend($.data(jq[0],"combotree").options,{width:_26.width,height:_26.height,originalValue:_26.originalValue,disabled:_26.disabled,readonly:_26.readonly});
-},clone:function(jq,_27){
-var t=jq.combo("clone",_27);
+var _36=jq.combo("options");
+return $.extend($.data(jq[0],"combotree").options,{width:_36.width,height:_36.height,originalValue:_36.originalValue,disabled:_36.disabled,readonly:_36.readonly});
+},clone:function(jq,_37){
+var t=jq.combo("clone",_37);
 t.data("combotree",{options:$.extend(true,{},jq.combotree("options")),tree:jq.combotree("tree")});
 return t;
 },tree:function(jq){
 return $.data(jq[0],"combotree").tree;
-},loadData:function(jq,_28){
+},loadData:function(jq,_38){
 return jq.each(function(){
-var _29=$.data(this,"combotree").options;
-_29.data=_28;
-var _2a=$.data(this,"combotree").tree;
-_2a.tree("loadData",_28);
+var _39=$.data(this,"combotree").options;
+_39.data=_38;
+var _3a=$.data(this,"combotree").tree;
+_3a.tree("loadData",_38);
 });
 },reload:function(jq,url){
 return jq.each(function(){
-var _2b=$.data(this,"combotree").options;
-var _2c=$.data(this,"combotree").tree;
+var _3b=$.data(this,"combotree").options;
+var _3c=$.data(this,"combotree").tree;
 if(url){
-_2b.url=url;
+_3b.url=url;
 }
-_2c.tree({url:_2b.url});
+_3c.tree({url:_3b.url});
 });
-},setValues:function(jq,_2d){
+},setValues:function(jq,_3d){
 return jq.each(function(){
-_15(this,_2d);
+var _3e=$(this).combotree("options");
+if($.isArray(_3d)){
+_3d=$.map(_3d,function(_3f){
+if(_3f&&typeof _3f=="object"){
+$.easyui.addArrayItem(_3e.mappingRows,"id",_3f);
+return _3f.id;
+}else{
+return _3f;
+}
 });
-},setValue:function(jq,_2e){
+}
+_15(this,_3d);
+});
+},setValue:function(jq,_40){
 return jq.each(function(){
-_15(this,[_2e]);
+$(this).combotree("setValues",$.isArray(_40)?_40:[_40]);
 });
 },clear:function(jq){
 return jq.each(function(){
-var _2f=$.data(this,"combotree").tree;
-_2f.find("div.tree-node-selected").removeClass("tree-node-selected");
-var cc=_2f.tree("getChecked");
-for(var i=0;i<cc.length;i++){
-_2f.tree("uncheck",cc[i].target);
-}
-$(this).combo("clear");
+$(this).combotree("setValues",[]);
 });
 },reset:function(jq){
 return jq.each(function(){
-var _30=$(this).combotree("options");
-if(_30.multiple){
-$(this).combotree("setValues",_30.originalValue);
+var _41=$(this).combotree("options");
+if(_41.multiple){
+$(this).combotree("setValues",_41.originalValue);
 }else{
-$(this).combotree("setValue",_30.originalValue);
+$(this).combotree("setValue",_41.originalValue);
 }
 });
 }};
-$.fn.combotree.parseOptions=function(_31){
-return $.extend({},$.fn.combo.parseOptions(_31),$.fn.tree.parseOptions(_31));
+$.fn.combotree.parseOptions=function(_42){
+return $.extend({},$.fn.combo.parseOptions(_42),$.fn.tree.parseOptions(_42));
 };
-$.fn.combotree.defaults=$.extend({},$.fn.combo.defaults,$.fn.tree.defaults,{editable:false});
+$.fn.combotree.defaults=$.extend({},$.fn.combo.defaults,$.fn.tree.defaults,{editable:false,textField:null,unselectedValues:[],mappingRows:[],keyHandler:{up:function(e){
+},down:function(e){
+},left:function(e){
+},right:function(e){
+},enter:function(e){
+_2f(this);
+},query:function(q,e){
+_2a(this,q);
+}}});
 })(jQuery);
 

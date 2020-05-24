@@ -1,7 +1,7 @@
 /**
- * jQuery EasyUI 1.4.4
+ * EasyUI for jQuery 1.9.5
  * 
- * Copyright (c) 2009-2015 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
@@ -22,7 +22,7 @@ _5(_2);
 };
 function _6(_7){
 $(_7).addClass("calendar").html("<div class=\"calendar-header\">"+"<div class=\"calendar-nav calendar-prevmonth\"></div>"+"<div class=\"calendar-nav calendar-nextmonth\"></div>"+"<div class=\"calendar-nav calendar-prevyear\"></div>"+"<div class=\"calendar-nav calendar-nextyear\"></div>"+"<div class=\"calendar-title\">"+"<span class=\"calendar-text\"></span>"+"</div>"+"</div>"+"<div class=\"calendar-body\">"+"<div class=\"calendar-menu\">"+"<div class=\"calendar-menu-year-inner\">"+"<span class=\"calendar-nav calendar-menu-prev\"></span>"+"<span><input class=\"calendar-menu-year\" type=\"text\"></input></span>"+"<span class=\"calendar-nav calendar-menu-next\"></span>"+"</div>"+"<div class=\"calendar-menu-month-inner\">"+"</div>"+"</div>"+"</div>");
-$(_7).bind("_resize",function(e,_8){
+$(_7)._bind("_resize",function(e,_8){
 if($(this).hasClass("easyui-fluid")||_8){
 _1(_7);
 }
@@ -32,22 +32,22 @@ return false;
 function _9(_a){
 var _b=$.data(_a,"calendar").options;
 var _c=$(_a).find(".calendar-menu");
-_c.find(".calendar-menu-year").unbind(".calendar").bind("keypress.calendar",function(e){
+_c.find(".calendar-menu-year")._unbind(".calendar")._bind("keypress.calendar",function(e){
 if(e.keyCode==13){
 _d(true);
 }
 });
-$(_a).unbind(".calendar").bind("mouseover.calendar",function(e){
+$(_a)._unbind(".calendar")._bind("mouseover.calendar",function(e){
 var t=_e(e.target);
 if(t.hasClass("calendar-nav")||t.hasClass("calendar-text")||(t.hasClass("calendar-day")&&!t.hasClass("calendar-disabled"))){
 t.addClass("calendar-nav-hover");
 }
-}).bind("mouseout.calendar",function(e){
+})._bind("mouseout.calendar",function(e){
 var t=_e(e.target);
 if(t.hasClass("calendar-nav")||t.hasClass("calendar-text")||(t.hasClass("calendar-day")&&!t.hasClass("calendar-disabled"))){
 t.removeClass("calendar-nav-hover");
 }
-}).bind("click.calendar",function(e){
+})._bind("click.calendar",function(e){
 var t=_e(e.target);
 if(t.hasClass("calendar-menu-next")||t.hasClass("calendar-nextyear")){
 _f(1);
@@ -84,7 +84,7 @@ var _12=t.attr("abbr").split(",");
 var y=parseInt(_12[0]);
 var m=parseInt(_12[1]);
 var d=parseInt(_12[2]);
-_b.current=new Date(y,m-1,d);
+_b.current=new _b.Date(y,m-1,d);
 _b.onSelect.call(_a,_b.current);
 if(!_11||_11.getTime()!=_b.current.getTime()){
 _b.onChange.call(_a,_b.current,_11);
@@ -172,7 +172,7 @@ _1f._outerHeight(_1d.height()-_1e._outerHeight());
 function _20(_21,_22,_23){
 var _24=$.data(_21,"calendar").options;
 var _25=[];
-var _26=new Date(_22,_23,0).getDate();
+var _26=new _24.Date(_22,_23,0).getDate();
 for(var i=1;i<=_26;i++){
 _25.push([_22,_23,i]);
 }
@@ -181,7 +181,7 @@ var _29=-1;
 while(_25.length>0){
 var _2a=_25.shift();
 _28.push(_2a);
-var day=new Date(_2a[0],_2a[1]-1,_2a[2]).getDay();
+var day=new _24.Date(_2a[0],_2a[1]-1,_2a[2]).getDay();
 if(_29==day){
 day=0;
 }else{
@@ -199,14 +199,14 @@ var _2b=_27[0];
 if(_2b.length<7){
 while(_2b.length<7){
 var _2c=_2b[0];
-var _2a=new Date(_2c[0],_2c[1]-1,_2c[2]-1);
+var _2a=new _24.Date(_2c[0],_2c[1]-1,_2c[2]-1);
 _2b.unshift([_2a.getFullYear(),_2a.getMonth()+1,_2a.getDate()]);
 }
 }else{
 var _2c=_2b[0];
 var _28=[];
 for(var i=1;i<=7;i++){
-var _2a=new Date(_2c[0],_2c[1]-1,_2c[2]-i);
+var _2a=new _24.Date(_2c[0],_2c[1]-1,_2c[2]-i);
 _28.unshift([_2a.getFullYear(),_2a.getMonth()+1,_2a.getDate()]);
 }
 _27.unshift(_28);
@@ -214,14 +214,14 @@ _27.unshift(_28);
 var _2d=_27[_27.length-1];
 while(_2d.length<7){
 var _2e=_2d[_2d.length-1];
-var _2a=new Date(_2e[0],_2e[1]-1,_2e[2]+1);
+var _2a=new _24.Date(_2e[0],_2e[1]-1,_2e[2]+1);
 _2d.push([_2a.getFullYear(),_2a.getMonth()+1,_2a.getDate()]);
 }
 if(_27.length<6){
 var _2e=_2d[_2d.length-1];
 var _28=[];
 for(var i=1;i<=7;i++){
-var _2a=new Date(_2e[0],_2e[1]-1,_2e[2]+i);
+var _2a=new _24.Date(_2e[0],_2e[1]-1,_2e[2]+i);
 _28.push([_2a.getFullYear(),_2a.getMonth()+1,_2a.getDate()]);
 }
 _27.push(_28);
@@ -233,7 +233,7 @@ var _30=$.data(_2f,"calendar").options;
 if(_30.current&&!_30.validator.call(_2f,_30.current)){
 _30.current=null;
 }
-var now=new Date();
+var now=new _30.Date();
 var _31=now.getFullYear()+","+(now.getMonth()+1)+","+now.getDate();
 var _32=_30.current?(_30.current.getFullYear()+","+(_30.current.getMonth()+1)+","+_30.current.getDate()):"";
 var _33=6-_30.firstDay;
@@ -249,6 +249,9 @@ var _35=$(_2f).find("div.calendar-body");
 _35.children("table").remove();
 var _36=["<table class=\"calendar-dtable\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">"];
 _36.push("<thead><tr>");
+if(_30.showWeek){
+_36.push("<th class=\"calendar-week\">"+_30.weekNumberHeader+"</th>");
+}
 for(var i=_30.firstDay;i<_30.weeks.length;i++){
 _36.push("<th>"+_30.weeks[i]+"</th>");
 }
@@ -269,20 +272,24 @@ cls="calendar-last";
 }
 }
 _36.push("<tr class=\""+cls+"\">");
+if(_30.showWeek){
+var _39=_30.getWeekNumber(new _30.Date(_38[0][0],parseInt(_38[0][1])-1,_38[0][2]));
+_36.push("<td class=\"calendar-week\">"+_39+"</td>");
+}
 for(var j=0;j<_38.length;j++){
 var day=_38[j];
 var s=day[0]+","+day[1]+","+day[2];
-var _39=new Date(day[0],parseInt(day[1])-1,day[2]);
-var d=_30.formatter.call(_2f,_39);
-var css=_30.styler.call(_2f,_39);
-var _3a="";
+var _3a=new _30.Date(day[0],parseInt(day[1])-1,day[2]);
+var d=_30.formatter.call(_2f,_3a);
+var css=_30.styler.call(_2f,_3a);
 var _3b="";
+var _3c="";
 if(typeof css=="string"){
-_3b=css;
+_3c=css;
 }else{
 if(css){
-_3a=css["class"]||"";
-_3b=css["style"]||"";
+_3b=css["class"]||"";
+_3c=css["style"]||"";
 }
 }
 var cls="calendar-day";
@@ -309,11 +316,11 @@ if(j==_38.length-1){
 cls+=" calendar-last";
 }
 }
-cls+=" "+_3a;
-if(!_30.validator.call(_2f,_39)){
+cls+=" "+_3b;
+if(!_30.validator.call(_2f,_3a)){
 cls+=" calendar-disabled";
 }
-_36.push("<td class=\""+cls+"\" abbr=\""+s+"\" style=\""+_3b+"\">"+d+"</td>");
+_36.push("<td class=\""+cls+"\" abbr=\""+s+"\" style=\""+_3c+"\">"+d+"</td>");
 }
 _36.push("</tr>");
 }
@@ -323,20 +330,20 @@ _35.append(_36.join(""));
 _35.children("table.calendar-dtable").prependTo(_35);
 _30.onNavigate.call(_2f,_30.year,_30.month);
 };
-$.fn.calendar=function(_3c,_3d){
-if(typeof _3c=="string"){
-return $.fn.calendar.methods[_3c](this,_3d);
+$.fn.calendar=function(_3d,_3e){
+if(typeof _3d=="string"){
+return $.fn.calendar.methods[_3d](this,_3e);
 }
-_3c=_3c||{};
+_3d=_3d||{};
 return this.each(function(){
-var _3e=$.data(this,"calendar");
-if(_3e){
-$.extend(_3e.options,_3c);
+var _3f=$.data(this,"calendar");
+if(_3f){
+$.extend(_3f.options,_3d);
 }else{
-_3e=$.data(this,"calendar",{options:$.extend({},$.fn.calendar.defaults,$.fn.calendar.parseOptions(this),_3c)});
+_3f=$.data(this,"calendar",{options:$.extend({},$.fn.calendar.defaults,$.fn.calendar.parseOptions(this),_3d)});
 _6(this);
 }
-if(_3e.options.border==false){
+if(_3f.options.border==false){
 $(this).addClass("calendar-noborder");
 }
 _1(this);
@@ -347,43 +354,50 @@ $(this).find("div.calendar-menu").hide();
 };
 $.fn.calendar.methods={options:function(jq){
 return $.data(jq[0],"calendar").options;
-},resize:function(jq,_3f){
+},resize:function(jq,_40){
 return jq.each(function(){
-_1(this,_3f);
+_1(this,_40);
 });
-},moveTo:function(jq,_40){
+},moveTo:function(jq,_41){
 return jq.each(function(){
-if(!_40){
-var now=new Date();
-$(this).calendar({year:now.getFullYear(),month:now.getMonth()+1,current:_40});
+var _42=$(this).calendar("options");
+if(!_41){
+var now=new _42.Date();
+$(this).calendar({year:now.getFullYear(),month:now.getMonth()+1,current:_41});
 return;
 }
-var _41=$(this).calendar("options");
-if(_41.validator.call(this,_40)){
-var _42=_41.current;
-$(this).calendar({year:_40.getFullYear(),month:_40.getMonth()+1,current:_40});
-if(!_42||_42.getTime()!=_40.getTime()){
-_41.onChange.call(this,_41.current,_42);
+if(_42.validator.call(this,_41)){
+var _43=_42.current;
+$(this).calendar({year:_41.getFullYear(),month:_41.getMonth()+1,current:_41});
+if(!_43||_43.getTime()!=_41.getTime()){
+_42.onChange.call(this,_42.current,_43);
 }
 }
 });
 }};
-$.fn.calendar.parseOptions=function(_43){
-var t=$(_43);
-return $.extend({},$.parser.parseOptions(_43,[{firstDay:"number",fit:"boolean",border:"boolean"}]));
+$.fn.calendar.parseOptions=function(_44){
+var t=$(_44);
+return $.extend({},$.parser.parseOptions(_44,["weekNumberHeader",{firstDay:"number",fit:"boolean",border:"boolean",showWeek:"boolean"}]));
 };
-$.fn.calendar.defaults={width:180,height:180,fit:false,border:true,firstDay:0,weeks:["S","M","T","W","T","F","S"],months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],year:new Date().getFullYear(),month:new Date().getMonth()+1,current:(function(){
+$.fn.calendar.defaults={Date:Date,width:180,height:180,fit:false,border:true,showWeek:false,firstDay:0,weeks:["S","M","T","W","T","F","S"],months:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],year:new Date().getFullYear(),month:new Date().getMonth()+1,current:(function(){
 var d=new Date();
 return new Date(d.getFullYear(),d.getMonth(),d.getDate());
-})(),formatter:function(_44){
-return _44.getDate();
-},styler:function(_45){
+})(),weekNumberHeader:"",getWeekNumber:function(_45){
+var _46=new Date(_45.getTime());
+_46.setDate(_46.getDate()+4-(_46.getDay()||7));
+var _47=_46.getTime();
+_46.setMonth(0);
+_46.setDate(1);
+return Math.floor(Math.round((_47-_46)/86400000)/7)+1;
+},formatter:function(_48){
+return _48.getDate();
+},styler:function(_49){
 return "";
-},validator:function(_46){
+},validator:function(_4a){
 return true;
-},onSelect:function(_47){
-},onChange:function(_48,_49){
-},onNavigate:function(_4a,_4b){
+},onSelect:function(_4b){
+},onChange:function(_4c,_4d){
+},onNavigate:function(_4e,_4f){
 }};
 })(jQuery);
 
