@@ -1,7 +1,7 @@
 /**
- * EasyUI for jQuery 1.9.5
+ * EasyUI for jQuery 1.9.15
  * 
- * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2021 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
@@ -302,7 +302,7 @@ return len>=_45[0]&&len<=_45[1];
 var _48={};
 _48[_47[1]]=_46;
 var _49=$.ajax({url:_47[0],dataType:"json",data:_48,async:false,cache:false,type:"post"}).responseText;
-return _49=="true";
+return _49.replace(/\s/g,"")=="true";
 },message:"Please fix this field."}},onBeforeValidate:function(){
 },onValidate:function(_4a){
 }};

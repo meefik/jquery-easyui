@@ -1,7 +1,7 @@
 /**
- * EasyUI for jQuery 1.9.5
+ * EasyUI for jQuery 1.9.15
  * 
- * Copyright (c) 2009-2020 www.jeasyui.com. All rights reserved.
+ * Copyright (c) 2009-2021 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the freeware license: http://www.jeasyui.com/license_freeware.php
  * To use it on other terms please contact us: info@jeasyui.com
@@ -201,7 +201,7 @@
 		initValue: function(jq, value){
 			return jq.each(function(){
 				var opts = $(this).datebox('options');
-				var value = opts.value;
+				// var value = opts.value;
 				if (value){
 					var date = opts.parser.call(this, value);
 					value = opts.formatter.call(this, date);
@@ -286,16 +286,19 @@
 			return (m<10?('0'+m):m)+'/'+(d<10?('0'+d):d)+'/'+y;
 		},
 		parser:function(s){
-			var copts = $(this).datebox('calendar').calendar('options');
-			if (!s) return new copts.Date();
+			var CDate = $.fn.calendar.defaults.Date;
+			if ($(this).data('datebox')){
+				CDate = $(this).datebox('calendar').calendar('options').Date;
+			}
+			if (!s) return new CDate();
 			var ss = s.split('/');
 			var m = parseInt(ss[0],10);
 			var d = parseInt(ss[1],10);
 			var y = parseInt(ss[2],10);
 			if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
-				return new copts.Date(y,m-1,d);
+				return new CDate(y,m-1,d);
 			} else {
-				return new copts.Date();
+				return new CDate();
 			}
 		},
 		
